@@ -150,7 +150,7 @@ SND_PCM_PLUGIN_DEFINE_FUNC(equal)
 	snd_pcm_equal_t *equal;
 	snd_config_t *sconf = NULL;
 	const char *controls = ".alsaequal.bin";
-	const char *library = "caps.so";
+	const char *library = "/usr/lib/ladspa/caps.so";
 	const char *module = "Eq10";
 	long channels = 2;
 	int err;
@@ -231,12 +231,14 @@ SND_PCM_PLUGIN_DEFINE_FUNC(equal)
 	}
 
 	/* Make sure that the control file makes sense */
-	if(equal->klass->PortDescriptors[equal->control_data->input_index] !=
+	if((equal->klass->PortDescriptors[equal->control_data->input_index] &
+		(LADSPA_PORT_INPUT | LADSPA_PORT_AUDIO)) !=
 			(LADSPA_PORT_INPUT | LADSPA_PORT_AUDIO)) {
 		SNDERR("Problem with control file %s.", controls);
 		return -1;
 	}
-	if(equal->klass->PortDescriptors[equal->control_data->output_index] !=
+	if((equal->klass->PortDescriptors[equal->control_data->output_index] &
+		(LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO)) !=
 			(LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO)) {
 		SNDERR("Problem with control file %s.", controls);
 		return -1;

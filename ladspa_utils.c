@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <inttypes.h>
 #include <fcntl.h>
 #include <dlfcn.h>
 #include <errno.h>
@@ -355,11 +354,13 @@ LADSPA_Control * LADSPAcontrolMMAP(const LADSPA_Descriptor *psDescriptor,
 						default_controls->control[index].type = LADSPA_CNTRL_OUTPUT;
 					}
 					index++;
-				} else if(psDescriptor->PortDescriptors[i] ==
-						(LADSPA_PORT_INPUT | LADSPA_PORT_AUDIO)) {
+				} else if((psDescriptor->PortDescriptors[i] &
+					(LADSPA_PORT_INPUT | LADSPA_PORT_AUDIO)) ==
+					(LADSPA_PORT_INPUT | LADSPA_PORT_AUDIO)){
 					default_controls->input_index = i;
-				} else if(psDescriptor->PortDescriptors[i] ==
-						(LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO)) {
+				} else if((psDescriptor->PortDescriptors[i] &
+					(LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO)) ==
+					(LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO)) {
 					default_controls->output_index = i;
 				}
 			}
@@ -404,7 +405,7 @@ LADSPA_Control * LADSPAcontrolMMAP(const LADSPA_Descriptor *psDescriptor,
 	}
 
 	if(ptr->id != psDescriptor->UniqueID) {
-		fprintf(stderr, "%s is not a control file for ladspa id %" PRId32 ".\n",
+		fprintf(stderr, "%s is not a control file for ladspa id %ld.\n",
 				filename, ptr->id);
 		LADSPAcontrolUnMMAP(ptr);
 		free(filename);

@@ -4,9 +4,9 @@ Q	?= @
 #Q	?=
 
 # Build Tools
-CC 	:= gcc
+#CC 	:= gcc
 CFLAGS := -I. -O2 -Wall -funroll-loops -ffast-math -fPIC -DPIC
-LD := gcc
+#LD := gcc
 LDFLAGS := -O2 -Wall -shared -lasound
 
 SND_PCM_OBJECTS = pcm_equal.o ladspa_utils.o
@@ -45,8 +45,8 @@ clean:
 
 install: all
 	@echo Installing...
-	$(Q)install -m 755 $(SND_PCM_BIN) ${DESTDIR}/usr/lib/alsa-lib/
-	$(Q)install -m 755 $(SND_CTL_BIN) ${DESTDIR}/usr/lib/alsa-lib/
+	$(Q)install -m 644 $(SND_PCM_BIN) ${DESTDIR}/usr/lib/alsa-lib/
+	$(Q)install -m 644 $(SND_CTL_BIN) ${DESTDIR}/usr/lib/alsa-lib/
 
 uninstall:
 	@echo Un-installing...
